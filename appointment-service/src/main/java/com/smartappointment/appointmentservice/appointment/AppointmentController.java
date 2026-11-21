@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,8 +25,10 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<AppointmentDTO> create(@Valid @RequestBody AppointmentDTO request) {
-        AppointmentDTO created = appointmentService.create(request);
+    public ResponseEntity<AppointmentDTO> create(
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @Valid @RequestBody AppointmentDTO request) {
+        AppointmentDTO created = appointmentService.create(request, idempotencyKey);
         return ResponseEntity.created(URI.create("/appointments/" + created.id())).body(created);
     }
 
@@ -37,6 +40,11 @@ public class AppointmentController {
     @GetMapping("/{id}")
     public AppointmentDTO findById(@PathVariable("id") Long id) {
         return appointmentService.findById(id);
+    }
+
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<AppointmentDTOFull> getAppointmentFullById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(appointmentService.getAppointmentFullById(id));
     }
 
     @PutMapping("/{id}")

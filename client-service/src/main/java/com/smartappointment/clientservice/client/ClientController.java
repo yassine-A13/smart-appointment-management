@@ -35,7 +35,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ClientDTO findById(@PathVariable Long id) {
+    public ClientDTO findById(@PathVariable("id") Long id) {
         return clientService.findById(id);
     }
 

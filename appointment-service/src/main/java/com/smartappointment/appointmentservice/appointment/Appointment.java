@@ -24,6 +24,9 @@ public class Appointment {
     @Column(nullable = false)
     private Long serviceId;
 
+    @Column(nullable = false, unique = true, length = 255)
+    private String idempotencyKey;
+
     @Column(nullable = false)
     private LocalDateTime appointmentDate;
 
@@ -64,6 +67,14 @@ public class Appointment {
 
     public void setServiceId(Long serviceId) {
         this.serviceId = serviceId;
+    }
+
+    public String getIdempotencyKey() {
+        return idempotencyKey;
+    }
+
+    public void setIdempotencyKey(String idempotencyKey) {
+        this.idempotencyKey = idempotencyKey;
     }
 
     public LocalDateTime getAppointmentDate() {
